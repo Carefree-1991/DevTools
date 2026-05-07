@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { useProject } from './ProjectContext';
 import SettingsModal from '../assistant/SettingsModal';
+import ExportDeployHub from '../export/ExportDeployHub';
 import { getAISettings } from '../assistant/aiEngine';
+import { getIntegrations } from '../export/githubApi';
 
 export default function ProjectHeader() {
   const {
@@ -10,12 +12,14 @@ export default function ProjectHeader() {
     duplicateProject, exportProject, importProject,
   } = useProject();
 
-  const [saved,         setSaved]         = useState(false);
-  const [showMore,      setShowMore]      = useState(false);
-  const [showSettings,  setShowSettings]  = useState(false);
+  const [saved,        setSaved]        = useState(false);
+  const [showMore,     setShowMore]     = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showExport,   setShowExport]   = useState(false);
   const importRef    = useRef(null);
   const projectNames = Object.keys(projects);
   const hasAIKey     = !!getAISettings().apiKey;
+  const hasGHToken   = !!getIntegrations().githubPAT;
 
   function flash() {
     setSaved(true);
@@ -195,6 +199,26 @@ export default function ProjectHeader() {
         className="hidden"
         onChange={handleImport}
       />
+
+      {/* Export & Deploy Hub button */}
+      <button
+        onClick={() => setShowExport(true)}
+        title="Export & Deploy Hub"
+        className={`
+          flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-lg border transition-colors
+          ${hasGHToken
+            ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-gray-500 hover:text-white'
+            : 'bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500'}
+        `}
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+          <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/>
+        </svg>
+        Export
+      </button>
+
+      {/* Export modal */}
+      {showExport && <ExportDeployHub onClose={() => setShowExport(false)} />}
 
       {/* AI Settings gear */}
       <button
