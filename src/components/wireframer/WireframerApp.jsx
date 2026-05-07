@@ -12,6 +12,7 @@ import ToolboxSidebar from './ToolboxSidebar';
 import WireframeCanvas from './WireframeCanvas';
 import { BLOCK_DEFS, renderBlock } from './blocks';
 import { useProject } from '../project/ProjectContext';
+import FileExplorerSidebar from '../project/FileExplorerSidebar';
 
 let itemCounter = 0;
 
@@ -21,13 +22,12 @@ export default function WireframerApp() {
   const [isScreenshotMode, setIsScreenshotMode] = useState(false);
 
   // ── Project save / load ──────────────────────────────────────────────────
-  const { registerTool, activeProject, projects } = useProject();
+  const { registerTool, getInitialToolState } = useProject();
   const saveRef = useRef({});
   saveRef.current = { canvasItems };
 
   useEffect(() => {
-    // Auto-load on mount if there's a saved state for this tool
-    const saved = activeProject ? projects[activeProject]?.wireframer : null;
+    const saved = getInitialToolState('wireframer');
     if (saved) loadState(saved);
 
     return registerTool('wireframer', () => saveRef.current, loadState);
@@ -104,6 +104,7 @@ export default function WireframerApp() {
       onDragEnd={handleDragEnd}
     >
       <div className="flex h-full bg-gray-100">
+        {!isScreenshotMode && <FileExplorerSidebar toolId="wireframer" />}
         {!isScreenshotMode && (
           <ToolboxSidebar onHideUI={() => setIsScreenshotMode(true)} />
         )}

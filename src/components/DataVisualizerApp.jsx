@@ -14,6 +14,7 @@ import 'reactflow/dist/style.css';
 import TableNode from './TableNode';
 import Sidebar from './Sidebar';
 import { useProject } from './project/ProjectContext';
+import FileExplorerSidebar from './project/FileExplorerSidebar';
 
 const nodeTypes = { tableNode: TableNode };
 
@@ -67,6 +68,7 @@ function Flow({ isScreenshotMode, onToggleScreenshot, loadSignal, onStateChange 
 
   return (
     <div className={`flex h-full bg-gray-950 overflow-hidden ${isScreenshotMode ? 'screenshot-mode' : ''}`}>
+      {!isScreenshotMode && <FileExplorerSidebar toolId="visualizer" />}
       {!isScreenshotMode && (
         <Sidebar onAddNode={handleAddNode} onHideUI={onToggleScreenshot} />
       )}
@@ -123,10 +125,10 @@ export default function DataVisualizerApp() {
   const saveRef = useRef({ nodes: [], edges: [] });
   const onStateChange = useCallback((n, e) => { saveRef.current = { nodes: n, edges: e }; }, []);
 
-  const { registerTool, activeProject, projects } = useProject();
+  const { registerTool, getInitialToolState } = useProject();
 
   useEffect(() => {
-    const saved = activeProject ? projects[activeProject]?.visualizer : null;
+    const saved = getInitialToolState('visualizer');
     if (saved) triggerLoad(saved);
     return registerTool('visualizer', () => saveRef.current, triggerLoad);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

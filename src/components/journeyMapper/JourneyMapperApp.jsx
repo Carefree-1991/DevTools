@@ -15,6 +15,7 @@ import JourneyNode, { NODE_CONFIG } from './JourneyNode';
 import { JourneyEdge, EDGE_CONFIG } from './JourneyEdge';
 import MapperSidebar from './MapperSidebar';
 import { useProject } from '../project/ProjectContext';
+import FileExplorerSidebar from '../project/FileExplorerSidebar';
 
 const nodeTypes = { journeyNode: JourneyNode };
 const edgeTypes = { journeyEdge: JourneyEdge };
@@ -77,6 +78,7 @@ function Flow({ isScreenshotMode, onToggleScreenshot, loadSignal, onStateChange 
 
   return (
     <div className={`flex h-full overflow-hidden ${isScreenshotMode ? 'bg-white' : 'bg-gray-950'}`}>
+      {!isScreenshotMode && <FileExplorerSidebar toolId="journey" />}
       {!isScreenshotMode && (
         <MapperSidebar
           selectedNodeType={selectedNodeType}
@@ -149,10 +151,10 @@ export default function JourneyMapperApp() {
   const saveRef = useRef({ nodes: [], edges: [] });
   const onStateChange = useCallback((n, e) => { saveRef.current = { nodes: n, edges: e }; }, []);
 
-  const { registerTool, activeProject, projects } = useProject();
+  const { registerTool, getInitialToolState } = useProject();
 
   useEffect(() => {
-    const saved = activeProject ? projects[activeProject]?.journey : null;
+    const saved = getInitialToolState('journey');
     if (saved) triggerLoad(saved);
     return registerTool('journey', () => saveRef.current, triggerLoad);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

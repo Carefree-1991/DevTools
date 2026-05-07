@@ -15,6 +15,7 @@ import {
   PRESETS,
 } from './codeGen';
 import { useProject } from '../project/ProjectContext';
+import FileExplorerSidebar from '../project/FileExplorerSidebar';
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
@@ -54,12 +55,12 @@ export default function JsonContractApp() {
   const previewRef = useRef(null);
 
   // ── Project save / load ──────────────────────────────────────────────────
-  const { registerTool, activeProject, projects } = useProject();
+  const { registerTool, getInitialToolState } = useProject();
   const saveRef = useRef({});
   saveRef.current = { fields, method, path, schemaName, description };
 
   useEffect(() => {
-    const saved = activeProject ? projects[activeProject]?.contract : null;
+    const saved = getInitialToolState('contract');
     if (saved) loadState(saved);
     return registerTool('contract', () => saveRef.current, loadState);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -155,6 +156,7 @@ export default function JsonContractApp() {
 
   return (
     <div className="flex h-full bg-gray-950 overflow-hidden text-sm">
+      <FileExplorerSidebar toolId="contract" />
 
       {/* ════════════════════ LEFT: Builder ════════════════════ */}
       <div className="w-[460px] shrink-0 flex flex-col border-r border-gray-700/60 overflow-hidden bg-gray-900">

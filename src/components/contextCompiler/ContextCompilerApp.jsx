@@ -47,7 +47,7 @@ function SectionToggle({ id, label, icon, on, onToggle, hasData }) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function ContextCompilerApp() {
-  const { getToolState, registerTool, activeProject, projects } = useProject();
+  const { getToolState, registerTool, getInitialToolState, activeProject } = useProject();
 
   // ── Settings state ────────────────────────────────────────────────────────
   const [objective,     setObjective]     = useState(DEFAULT_CONFIG.objective);
@@ -69,7 +69,7 @@ export default function ContextCompilerApp() {
   saveRef.current = { objective, targetAI, description, techStack, conventions, incChecklist, incFileMap, sections };
 
   useEffect(() => {
-    const saved = activeProject ? projects[activeProject]?.compiler : null;
+    const saved = getInitialToolState('compiler');
     if (saved) loadState(saved);
     return registerTool('compiler', () => saveRef.current, loadState);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

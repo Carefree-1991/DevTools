@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useProject } from '../project/ProjectContext';
+import FileExplorerSidebar from '../project/FileExplorerSidebar';
 import ReactFlow, {
   ReactFlowProvider,
   useNodesState,
@@ -357,12 +358,12 @@ export default function TreeVisualizerApp() {
   const [activeDragNodeId, setActiveDragNodeId] = useState(null);
 
   // ── Project save / load ──────────────────────────────────────────────────
-  const { registerTool, activeProject, projects } = useProject();
+  const { registerTool, getInitialToolState } = useProject();
   const saveRef = useRef({});
   saveRef.current = { nodes, convention };
 
   useEffect(() => {
-    const saved = activeProject ? projects[activeProject]?.tree : null;
+    const saved = getInitialToolState('tree');
     if (saved) loadState(saved);
     return registerTool('tree', () => saveRef.current, loadState);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -462,6 +463,7 @@ export default function TreeVisualizerApp() {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex h-full overflow-hidden bg-gray-950">
+        {!isScreenshotMode && <FileExplorerSidebar toolId="tree" />}
 
         {/* ═══════════════ LEFT PANEL ═══════════════ */}
         {!isScreenshotMode && (
