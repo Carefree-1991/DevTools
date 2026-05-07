@@ -1,0 +1,25 @@
+@import 'reactflow/dist/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Override React Flow node selection border in screenshot mode */
+.screenshot-mode .react-flow__node.selected > div {
+  box-shadow: none !important;
+}
+
+/* Clean up default React Flow handle style */
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+}
