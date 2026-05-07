@@ -121,6 +121,19 @@ export function ProjectProvider({ children }) {
     reader.readAsText(file);
   }
 
+  // Inject AI-generated state into a single tool without touching the others
+  function injectToolState(toolId, state) {
+    const tool = tools.current[toolId];
+    if (!tool) throw new Error(`Tool "${toolId}" is not registered`);
+    tool.loadState(state);
+  }
+
+  // Read the current live state from a single tool (for AI context)
+  function getToolState(toolId) {
+    const tool = tools.current[toolId];
+    return tool ? tool.getSaveState() : null;
+  }
+
   return (
     <ProjectContext.Provider value={{
       projects,
@@ -133,6 +146,8 @@ export function ProjectProvider({ children }) {
       duplicateProject,
       exportProject,
       importProject,
+      injectToolState,
+      getToolState,
     }}>
       {children}
     </ProjectContext.Provider>

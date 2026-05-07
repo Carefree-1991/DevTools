@@ -6,6 +6,7 @@ import WireframerApp from './components/wireframer/WireframerApp';
 import JourneyMapperApp from './components/journeyMapper/JourneyMapperApp';
 import JsonContractApp from './components/jsonContract/JsonContractApp';
 import TreeVisualizerApp from './components/treeVisualizer/TreeVisualizerApp';
+import HelpAssistant from './components/assistant/HelpAssistant';
 
 const TABS = [
   { id: 'visualizer', label: 'Data Visualizer'      },
@@ -63,6 +64,9 @@ function DevTools() {
         <div className={`h-full ${activeTab === 'contract'   ? 'block' : 'hidden'}`}><JsonContractApp /></div>
         <div className={`h-full ${activeTab === 'tree'       ? 'block' : 'hidden'}`}><TreeVisualizerApp /></div>
       </div>
+
+      {/* ── AI assistant FAB + drawer (always rendered, tab-aware) ──────── */}
+      <HelpAssistant activeTab={activeTab} />
     </div>
   );
 }

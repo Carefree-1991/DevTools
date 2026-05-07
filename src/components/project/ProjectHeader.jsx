@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { useProject } from './ProjectContext';
+import SettingsModal from '../assistant/SettingsModal';
+import { getAISettings } from '../assistant/aiEngine';
 
 export default function ProjectHeader() {
   const {
@@ -8,10 +10,12 @@ export default function ProjectHeader() {
     duplicateProject, exportProject, importProject,
   } = useProject();
 
-  const [saved,      setSaved]      = useState(false);
-  const [showMore,   setShowMore]   = useState(false);
+  const [saved,         setSaved]         = useState(false);
+  const [showMore,      setShowMore]      = useState(false);
+  const [showSettings,  setShowSettings]  = useState(false);
   const importRef    = useRef(null);
   const projectNames = Object.keys(projects);
+  const hasAIKey     = !!getAISettings().apiKey;
 
   function flash() {
     setSaved(true);
@@ -191,6 +195,26 @@ export default function ProjectHeader() {
         className="hidden"
         onChange={handleImport}
       />
+
+      {/* AI Settings gear */}
+      <button
+        onClick={() => setShowSettings(true)}
+        title="AI Settings"
+        className={`
+          w-7 h-7 rounded-lg flex items-center justify-center transition-colors shrink-0
+          ${hasAIKey
+            ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-800 border border-transparent'
+            : 'text-amber-400 bg-amber-400/10 border border-amber-500/30 hover:bg-amber-400/20'
+          }
+        `}
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+          <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
+        </svg>
+      </button>
+
+      {/* Settings modal */}
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
 
       {/* Active project + stats */}
       <div className="ml-auto flex items-center gap-3">
