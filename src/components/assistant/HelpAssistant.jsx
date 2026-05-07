@@ -80,6 +80,16 @@ export default function HelpAssistant({ activeTab }) {
     if (open) setTimeout(() => inputRef.current?.focus(), 150);
   }, [open]);
 
+  // Listen for Context Compiler "Send to AI" events
+  useEffect(() => {
+    function onSendToAssistant(e) {
+      setInput(e.detail?.prompt ?? '');
+      setOpen(true);
+    }
+    window.addEventListener('devtools:sendToAssistant', onSendToAssistant);
+    return () => window.removeEventListener('devtools:sendToAssistant', onSendToAssistant);
+  }, []);
+
   async function handleSend(text) {
     const prompt = (text ?? input).trim();
     if (!prompt || loading) return;

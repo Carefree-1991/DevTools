@@ -7,6 +7,7 @@ import JourneyMapperApp from './components/journeyMapper/JourneyMapperApp';
 import JsonContractApp from './components/jsonContract/JsonContractApp';
 import TreeVisualizerApp from './components/treeVisualizer/TreeVisualizerApp';
 import HelpAssistant from './components/assistant/HelpAssistant';
+import ContextCompilerApp from './components/contextCompiler/ContextCompilerApp';
 
 const TABS = [
   { id: 'visualizer', label: 'Data Visualizer'      },
@@ -14,6 +15,7 @@ const TABS = [
   { id: 'journey',    label: 'Journey Mapper'        },
   { id: 'contract',   label: 'JSON Contract Builder' },
   { id: 'tree',       label: 'Component Tree'        },
+  { id: 'compiler',   label: '✦ Context Compiler'   },
 ];
 
 function DevTools() {
@@ -63,6 +65,7 @@ function DevTools() {
         <div className={`h-full ${activeTab === 'journey'    ? 'block' : 'hidden'}`}><JourneyMapperApp /></div>
         <div className={`h-full ${activeTab === 'contract'   ? 'block' : 'hidden'}`}><JsonContractApp /></div>
         <div className={`h-full ${activeTab === 'tree'       ? 'block' : 'hidden'}`}><TreeVisualizerApp /></div>
+        <div className={`h-full ${activeTab === 'compiler'   ? 'block' : 'hidden'}`}><ContextCompilerApp /></div>
       </div>
 
       {/* ── AI assistant FAB + drawer (always rendered, tab-aware) ──────── */}
